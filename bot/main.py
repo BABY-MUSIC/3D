@@ -1,14 +1,13 @@
 import logging
 import os
 from dotenv import load_dotenv
-from teambabyAPI import api  # Import the function from teambabyAPI
-
+from teambabyAPI import api  # Import the 'api' class from teambabyAPI
 from plugin_manager import PluginManager
 from openai_helper import OpenAIHelper, default_max_tokens, are_functions_available
 from telegram_bot import ChatGPTTelegramBot
 
 def main():
-    # Read .env file
+    # Load .env file
     load_dotenv()
 
     # Setup logging
@@ -18,22 +17,32 @@ def main():
     )
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
-    # Check if the required environment variables are set
+    # Check if required environment variables are set
     required_values = ['TELEGRAM_BOT_TOKEN']
     missing_values = [value for value in required_values if os.environ.get(value) is None]
     if len(missing_values) > 0:
         logging.error(f'The following environment values are missing in your .env: {", ".join(missing_values)}')
         exit(1)
 
-    # Get OpenAI API key using teambabyAPI
-    openai_api_key = api()  # Fetch the API key from teambabyAPI
+    # Create an instance of the api class (not for fetching an API key, but for using its methods)
+    api_instance = api()  # Instantiate the 'api' class from teambabyAPI
+    
+    # Assuming 'api_instance' has some method you want to use, like 'gemini' or others
+    # For example, you can call an API function from teambabyAPI (e.g., `gemini` or others)
+    # Adjust this to fit your actual use case; we're assuming `api` has a method like 'gemini'
+    response = api_instance.gemini('query_or_task_here')  # Call a method of the `api` class
 
-    # Setup configurations
+    # If the method returns a useful result, proceed
+    if not response:
+        logging.error("Failed to get valid response from API.")
+        exit(1)
+
+    # Proceed with OpenAI and Telegram configurations
     model = os.environ.get('OPENAI_MODEL', 'gpt-3.5-turbo')
     functions_available = are_functions_available(model=model)
     max_tokens_default = default_max_tokens(model=model)
+    
     openai_config = {
-        'api_key': openai_api_key,  # Use the key fetched from teambabyAPI
         'show_usage': os.environ.get('SHOW_USAGE', 'false').lower() == 'true',
         'stream': os.environ.get('STREAM', 'true').lower() == 'true',
         'proxy': os.environ.get('PROXY', None) or os.environ.get('OPENAI_PROXY', None),
