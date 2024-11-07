@@ -108,7 +108,9 @@ def main():
 
     # Initialize the plugin manager
     plugin_manager = PluginManager(plugin_config)
-    plugins = plugin_manager.load_plugins()
+
+    # Plugins are loaded during initialization, so no need to call `load_plugins()`
+    plugins = plugin_manager.plugins  # Directly access the loaded plugins
 
     # Initialize OpenAI Helper
     openai_helper = OpenAIHelper(openai_config)
