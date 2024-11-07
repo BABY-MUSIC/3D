@@ -1,7 +1,7 @@
 import logging
 import os
 from dotenv import load_dotenv
-from teambabyAPI import api  # Import the 'api' class from teambabyAPI module
+from teambabyAPI import api  # Directly import api as a callable function
 from plugin_manager import PluginManager
 from openai_helper import OpenAIHelper, default_max_tokens, are_functions_available
 from telegram_bot import ChatGPTTelegramBot
@@ -24,12 +24,8 @@ def main():
         logging.error(f'The following environment values are missing in your .env: {", ".join(missing_values)}')
         exit(1)
 
-    # Instantiate the 'api' class from teambabyAPI
-    api_instance = api()  # Instantiate the 'api' class directly (assuming 'api' is the class in teambabyAPI)
-
-    # Assuming 'api_instance' has some method you want to use, like 'gemini' or others
-    # For example, you can call an API function from teambabyAPI (e.g., `gemini` or others)
-    response = api_instance.gemini('query_or_task_here')  # Call a method of the 'api' class
+    # Use the 'api' function directly (assuming it's a function inside teambabyAPI)
+    response = api.gemini('query_or_task_here')  # Directly call the 'gemini' function from 'api'
     
     # If the method returns a useful result, proceed
     if not response:
