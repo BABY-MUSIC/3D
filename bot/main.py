@@ -108,15 +108,12 @@ def main():
 
     # Initialize the plugin manager
     plugin_manager = PluginManager(plugin_config)
-
-    # Plugins are loaded during initialization, so no need to call `load_plugins()`
-    plugins = plugin_manager.plugins  # Directly access the loaded plugins
-
-    # Initialize OpenAI Helper
-    openai_helper = OpenAIHelper(openai_config)
+    
+    # Initialize OpenAI Helper with the required arguments
+    openai_helper = OpenAIHelper(openai_config, plugin_manager)
 
     # Initialize the Telegram bot
-    telegram_bot = ChatGPTTelegramBot(telegram_config, openai_helper, plugins)
+    telegram_bot = ChatGPTTelegramBot(telegram_config, openai_helper)
 
     # Start the bot
     telegram_bot.start()
